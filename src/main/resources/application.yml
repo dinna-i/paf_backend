@@ -1,0 +1,74 @@
+server:
+  port: 8084
+
+spring:
+  application:
+    name: social
+
+  datasource:
+    username: root
+    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/social
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            redirect-uri: "http://localhost:8084/login/oauth2/code/google"
+            scope:
+              - email
+              - profile
+      resource-server:
+        jwt:
+          issuer-uri: https://accounts.google.com
+          jwk-set-uri: https://www.googleapis.com/oauth2/v3/certs
+
+  # File upload configuration
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 15MB
+
+# Custom properties for file storage
+file:
+  upload-dir: ./uploads
+  allowed-image-types: image/jpeg,image/png,image/gif
+  allowed-video-types: video/mp4,video/quicktime
+  max-video-duration-seconds: 30
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.oauth2: DEBUG
+
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    expiration: 86400000  # 1 day in milliseconds
+  oauth2:
+    # After OAuth2 login, user will be redirected to this controller endpoint
+    success-url: /api/auth/oauth2/callback
+  frontend:
+    url: http://localhost:5173

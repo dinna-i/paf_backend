@@ -6,6 +6,7 @@ import com.sapp.social.model.Post;
 import com.sapp.social.model.User;
 import com.sapp.social.repository.PostRepository;
 import com.sapp.social.repository.UserRepository;
+import com.sapp.social.util.VideoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +28,7 @@ public class PostService {
 
     @Autowired
     private FileStorageService fileStorageService;
+
 
     public Post createPost(Long userId, String description, List<MultipartFile> mediaFiles) throws IOException {
         // Validate user existence
@@ -64,6 +66,7 @@ public class PostService {
                     content.setFileType("image");
                 } else if (fileStorageService.isVideoFile(file.getContentType())) {
                     content.setFileType("video");
+
                     content.setDuration(0); // Placeholder for video duration
                 } else {
                     content.setFileType("unknown");

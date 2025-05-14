@@ -57,7 +57,7 @@ public class CommentController {
                 comment.getUser().getUserName(),
                 comment.getPost().getPostId(),
                 comment.getParentComment() != null ? comment.getParentComment().getCommentId() : null,
-                List.of() // Empty replies for now, because it's a new comment
+                List.of()
         );
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
